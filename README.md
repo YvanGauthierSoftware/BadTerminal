@@ -18,3 +18,12 @@ make
 ```
 
 Sur Linux, le lien avec `libutil` est ajouté automatiquement par le `Makefile`.
+
+## Tests
+
+```sh
+make test
+```
+
+La suite vérifie la boucle d'événements, la création et le redimensionnement du PTY,
+ainsi que le transfert I/O et le code de sortie à travers la CLI dans un vrai pseudo-terminal.

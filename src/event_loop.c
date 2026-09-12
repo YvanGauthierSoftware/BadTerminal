@@ -77,17 +77,17 @@ static int update_backend(event_loop_t *loop, int fd, unsigned events, int add)
     if (add) {
         return epoll_ctl(loop->backend_fd, EPOLL_CTL_ADD, fd, &event);
     }
-    return epoll_ctl(loop->backend_fd, EPOLL_CTL_MOD, fd, &event);
+    return epoll_ctl(loop->backend_fd, EPOLL_CTL_DEL, fd, NULL);
 #else
     struct kevent changes[2];
     int count = 0;
     if (events & EVENT_READ) {
-        EV_SET(&changes[count++], fd, EVFILT_READ, add ? EV_ADD : EV_ADD, 0, 0, NULL);
+        EV_SET(&changes[count++], fd, EVFILT_READ, add ? EV_ADD : EV_DELETE, 0, 0, NULL);
     } else {
         EV_SET(&changes[count++], fd, EVFILT_READ, EV_DELETE, 0, 0, NULL);
     }
     if (events & EVENT_WRITE) {
-        EV_SET(&changes[count++], fd, EVFILT_WRITE, add ? EV_ADD : EV_ADD, 0, 0, NULL);
+        EV_SET(&changes[count++], fd, EVFILT_WRITE, add ? EV_ADD : EV_DELETE, 0, 0, NULL);
     } else {
         EV_SET(&changes[count++], fd, EVFILT_WRITE, EV_DELETE, 0, 0, NULL);
     }

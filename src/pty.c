@@ -1,3 +1,7 @@
+#if defined(__linux__) && !defined(_GNU_SOURCE)
+#define _GNU_SOURCE
+#endif
+
 #include "pty.h"
 
 #include <errno.h>
@@ -14,9 +18,10 @@
 #include <pty.h>
 #endif
 
-int pty_spawn(pty_process_t *process, char *const command[])
+int pty_spawn(pty_process_t *process, char *const command[], unsigned rows, unsigned columns)
 {
-    struct winsize size = {.ws_row = 24, .ws_col = 80};
+    struct winsize size = {.ws_row = (unsigned short)(rows ? rows : 24),
+                            .ws_col = (unsigned short)(columns ? columns : 80)};
     int master_fd;
     pid_t child_pid = forkpty(&master_fd, NULL, NULL, &size);
     if (child_pid == -1) return -1;

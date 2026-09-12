@@ -94,7 +94,7 @@ int main(int argc, char **argv)
         return 1;
     }
     if (terminal_size(STDIN_FILENO, &rows, &columns) == -1 ||
-        pty_spawn(&app.pty, command) == -1) {
+        pty_spawn(&app.pty, command, rows, columns) == -1) {
         perror("badterm: pty_spawn");
         terminal_restore(&app.terminal);
         return 1;
